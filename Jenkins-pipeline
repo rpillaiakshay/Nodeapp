@@ -11,7 +11,7 @@ pipeline {
                         branches: [[name: '*/main']],
                         extensions: [],
                         userRemoteConfigs: [[
-                            credentialsId: 'GITHUB_CREDENTIALS',
+                            credentialsId: 'GitHub',
                             url: 'https://github.com/rpillaiakshay/Nodeapp'
                         ]]
                     )
@@ -36,7 +36,7 @@ pipeline {
         stage('Deploy Docker Image to DockerHub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'DOCKERHUB_CREDENTIALS', variable: 'DOCKERHUB_PASSWORD')]) {
+                    withCredentials([string(credentialsId: 'DockerHub', variable: 'DOCKERHUB_PASSWORD')]) {
                         sh 'echo $DOCKERHUB_PASSWORD | docker login -u rpillaiakshay --password-stdin'
                     }
                     sh 'docker push rpillaiakshay/node-app:1.0'

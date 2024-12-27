@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    tools { nodejs 'node' }
+    tools { nodejs 'Nodejs' }
 
     stages {
         stage('Clone code from GitHub') {
@@ -11,7 +11,7 @@ pipeline {
                         branches: [[name: '*/main']],
                         extensions: [],
                         userRemoteConfigs: [[
-                            credentialsId: 'GitHub',
+                            credentialsId: 'GitHub',  // GitHub token credential ID
                             url: 'https://github.com/rpillaiakshay/Nodeapp'
                         ]]
                     )
@@ -36,10 +36,10 @@ pipeline {
         stage('Deploy Docker Image to DockerHub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'DockerHub', variable: 'Docker-Credential')]) {
-                        sh 'echo $DOCKERHUB_PASSWORD | docker login -u rpillaiakshay --password-stdin'
+                    withCredentials([string(credentialsId: 'DockerHub')]) {
+                        sh 'echo $DOCKERHUB_TOKEN | docker login -u rpillaiakshay --password-stdin'
                     }
-                    sh 'docker push rpillaiakshay/latest'
+                    sh 'docker push rpillaiakshay/node-app:latest'
                 }
             }
         }

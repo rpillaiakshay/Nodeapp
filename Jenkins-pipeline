@@ -36,7 +36,7 @@ pipeline {
         stage('Deploy Docker Image to DockerHub') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'DockerHub', variable: 'DOCKERHUB_PASSWORD')]) {
+                    withCredentials([string(credentialsId: 'DockerHub', variable: 'DockerHub')]) {
                         sh 'echo $DOCKERHUB_PASSWORD | docker login -u rpillaiakshay --password-stdin'
                     }
                     sh 'docker push rpillaiakshay/node-app:1.0'

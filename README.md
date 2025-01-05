@@ -78,7 +78,7 @@ The objective of this project is to set up a CI/CD pipeline to build, test, and 
    git init
    git remote add origin https://github.com/rpillaiakshay/Nodeapp.git
    git add .
-   git commit -m "Initial commit"
+   git commit -m "Deploy NodeApp to AWS EKS"
    git push -u origin main
    ```
 

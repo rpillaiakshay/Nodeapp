@@ -143,3 +143,87 @@ The objective of this project is to set up a CI/CD pipeline to build, test, and 
 
 ## Conclusion
 This project demonstrates the complete lifecycle of a CI/CD pipeline for a Node.js application using Jenkins, Docker and Kubernetes. The setup ensures a streamlined process for deploying scalable and highly available applications while laying the groundwork for future enhancements or complex implementations.
+
+
+{{
+
+
+*File-by-File Explanation*
+
+*1. Dockerfile*
+The Dockerfile is used to create a Docker image for the Node.js application.
+
+- `FROM node:14`: Uses the official Node.js 14 image as the base image.
+- `WORKDIR /app`: Sets the working directory to `/app`.
+- `COPY package*.json ./`: Copies the `package.json` and `package-lock.json` files to the working directory.
+- `RUN npm install`: Installs the dependencies listed in `package.json`.
+- `COPY . .`: Copies the rest of the application code to the working directory.
+- `EXPOSE 3000`: Exposes port 3000 for the application.
+- `CMD ["node", "server.js"]`: Sets the default command to run when the container starts.
+
+*2. nodejs-app.yaml*
+This file defines a Kubernetes deployment and service for the Node.js application.
+
+- `apiVersion: apps/v1`: Specifies the API version for the deployment.
+- `kind: Deployment`: Defines a deployment resource.
+- `metadata.name: nodejs-app`: Sets the name of the deployment.
+- `spec.replicas: 2`: Specifies the number of replicas (i.e., pods) to run.
+- `spec.selector.matchLabels.app: nodejs-app`: Selects pods with the label `app: nodejs-app`.
+- `spec.template.metadata.labels.app: nodejs-app`: Sets the label `app: nodejs-app` for the pods.
+- `spec.template.spec.containers.name: nodejs-app`: Names the container `nodejs-app`.
+- `spec.template.spec.containers.image: rpillaiakshay/node-app:latest`: Specifies the Docker image to use.
+- `spec.template.spec.containers.ports.containerPort: 3000`: Exposes port 3000 for the container.
+
+The service definition exposes port 80 and targets port 3000 on the pods.
+
+*3. package.json*
+This file defines the dependencies and scripts for the Node.js application.
+
+- `name: nodeapp`: Sets the name of the application.
+- `version: 1.0.0`: Sets the version of the application.
+- `dependencies.express: ^4.17.1`: Specifies the Express.js dependency.
+- `scripts.start: node server.js`: Defines a script to start the application.
+
+*4. server.js*
+This file defines a simple Express.js application that listens on port 3000.
+
+- `const express = require('express')`: Imports the Express.js module.
+- `const app = express()`: Creates an Express.js application instance.
+- `const port = 3000`: Sets the port number.
+- `app.get('/', (req, res) => { ... })`: Defines a route for the root URL.
+- `app.listen(port, () => { ... })`: Starts the application and listens on the specified port.
+
+*5. Jenkinsfile*
+This file defines a Jenkins pipeline that automates the build, test, and deployment process.
+
+- `agent any`: Specifies that the pipeline can run on any agent.
+- `tools { nodejs 'Nodejs' }`: Installs the Node.js tool.
+- `stages { ... }`: Defines the pipeline stages.
+
+The pipeline stages include:
+
+1. Cloning the code from GitHub.
+2. Building the Node.js application using `npm install`.
+3. Building the Docker image using `docker build`.
+4. Pushing the Docker image to Docker Hub.
+5. Deploying the application to a Kubernetes cluster using `kubectl apply`.
+
+*Output Generated*
+
+The pipeline generates several outputs, including:
+
+- A built Node.js application.
+- A Docker image pushed to Docker Hub.
+- A deployed application on a Kubernetes cluster.
+- Logs and artifacts from the pipeline execution.
+
+*Major Portions of the Contents*
+
+The major portions of the contents in the GitHub repository include:
+
+- The Node.js application code in `server.js`.
+- The Dockerfile that defines the Docker image.
+- The Kubernetes deployment and service definitions in `nodejs-app.yaml`.
+- The Jenkins pipeline definition in `Jenkinsfile`.
+
+}}
